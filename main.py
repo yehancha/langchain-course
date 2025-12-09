@@ -2,15 +2,14 @@ import os
 
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 
 load_dotenv()
 
 
 def main():
     print("Hello from langchain-course!")
-    
+
     elon_musk_prompt = """
     Elon Reeve Musk[b] (born June 28, 1971) is a businessman and entrepreneur known for his leadership of Tesla, SpaceX, X, and xAI. Musk has been the wealthiest person in the world since 2021; as of October 2025, Forbes estimates his net worth to be around $500 billion.
 
@@ -24,21 +23,21 @@ Musk is a supporter of global far-right figures, causes, and political parties. 
     """
 
     summary_template = """
-    Using the {information} given, I want to create:
+    Using the given {information}, I want to create:
     1. Short summary
     2. Two interesting facts about the person
-    """ 
+    """
 
     summary_prompt_template = PromptTemplate(
-        input_variables=["information"],
-        template=summary_template
+        input_variables=["information"], template=summary_template
     )
 
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+    llm = ChatOllama(model="gemma3:270m", temperature=0)
     chain = summary_prompt_template | llm
     response = chain.invoke({"information": elon_musk_prompt})
 
     print(response.content)
+
 
 if __name__ == "__main__":
     main()

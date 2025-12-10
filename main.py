@@ -74,7 +74,7 @@ def main():
     result = agent.invoke(
         {
             "messages": HumanMessage(
-                content="Who is the father of current f1 world champion?"
+                content="search for 3 job postings for an ai engineer using langchain in the bay area on linkedin and list their details?"
             )
         }
     )

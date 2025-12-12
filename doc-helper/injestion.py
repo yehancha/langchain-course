@@ -76,7 +76,7 @@ async def main():
             "url": "https://python.langchain.com/",
             "max_depth": 5,
             "extra_depth": "advanced",
-            "instructions": "content on ai agents",
+            "instructions": "founder of langchain",
         }
     )
     all_docs = [

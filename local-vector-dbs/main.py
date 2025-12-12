@@ -18,7 +18,7 @@ def main():
 
     # print("Embedding documents only once...")
 
-    # loader = PyPDFLoader("2210.03629v3.pdf")
+    # loader = PyPDFLoader("local-vector-dbs/2210.03629v3.pdf")
     # documents = loader.load()
 
     # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=30, separator="\n")

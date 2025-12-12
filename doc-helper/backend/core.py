@@ -32,8 +32,12 @@ def run_llm(query: str) -> str:
     retrieval_chain = create_retrieval_chain(doc_search.as_retriever(), stuff_documents_chain)
     result = retrieval_chain.invoke(input={"input": query})
 
-    return result
+    return {
+        "query": result["input"],
+        "result": result["answer"],
+        "source_documents": result["context"]
+    }
 
 if __name__ == "__main__":
     result = run_llm("What is a LangChain Chain?")
-    print(result["answer"])
+    print(result["result"])

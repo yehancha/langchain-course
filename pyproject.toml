@@ -20,5 +20,6 @@ dependencies = [
     "langsmith>=0.4.59",
     "pypdf>=6.4.1",
     "python-dotenv>=1.2.1",
+    "streamlit>=1.52.1",
     "tavily-python>=0.7.14",
 ]

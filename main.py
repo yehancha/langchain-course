@@ -1,5 +1,51 @@
+import os
+from dotenv import load_dotenv
+from langchain_classic import hub
+from langchain_classic.chains.combine_documents import \
+    create_stuff_documents_chain
+from langchain_classic.chains.retrieval import create_retrieval_chain
+from langchain_core.prompts import PromptTemplate
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_pinecone import PineconeVectorStore
+
+load_dotenv()
+
 def main():
-    print("Hello from langchain-course!")
+    print("Retrieving...")
+
+    embeddings = OllamaEmbeddings(model="qwen3-embedding:0.6b")
+    llm = ChatOllama(model="qwen3:0.6b", temperature=0.0)
+
+    query = "What is Pinecone in machine learning?"
+
+    vectorstore = PineconeVectorStore(
+        embedding=embeddings,
+        index_name=os.getenv("INDEX_NAME"),
+    )
+
+    retrieval_prompt = """
+    Answer any use questions based solely on the context below:
+
+    <context>
+    {context}
+    </context>
+
+    chat_history
+
+    {input}
+    """
+
+    retrieval_prompt = PromptTemplate(
+        template=retrieval_prompt,
+        input_variables=["context", "input", "chat_history"],
+    )
+
+    combine_documents_chain = create_stuff_documents_chain(llm, retrieval_prompt)
+    retrieval_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_documents_chain)
+
+    result = retrieval_chain.invoke(input={ "input": query })
+
+    print(result)
 
 
 if __name__ == "__main__":

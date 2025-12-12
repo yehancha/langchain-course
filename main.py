@@ -1,14 +1,21 @@
 import os
+
 from dotenv import load_dotenv
 from langchain_classic import hub
 from langchain_classic.chains.combine_documents import \
     create_stuff_documents_chain
 from langchain_classic.chains.retrieval import create_retrieval_chain
 from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
 load_dotenv()
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
 
 def main():
     print("Retrieving...")
@@ -40,10 +47,16 @@ def main():
         input_variables=["context", "input", "chat_history"],
     )
 
-    combine_documents_chain = create_stuff_documents_chain(llm, retrieval_prompt)
-    retrieval_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_documents_chain)
+    retrieval_chain = (
+        {
+            "context": vectorstore.as_retriever() | format_docs,
+            "input": RunnablePassthrough(),
+        }
+        | retrieval_prompt
+        | llm
+    )
 
-    result = retrieval_chain.invoke(input={ "input": query })
+    result = retrieval_chain.invoke(query)
 
     print(result)
 

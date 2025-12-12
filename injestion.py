@@ -6,7 +6,7 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
 
-load_dotenv() 
+load_dotenv()
 
 if __name__ == "__main__":
     print("Injesting...")
